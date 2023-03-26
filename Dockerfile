@@ -192,28 +192,6 @@ RUN \
     && \
     echo
 
-# Install audio requirements
-RUN \
-    echo "**** Update apt database ****" \
-        && apt-get update \
-    && \
-    echo "**** Install X Server requirements ****" \
-        && apt-get install -y --no-install-recommends \
-            pulseaudio \
-            alsa-utils \
-            libasound2 \
-            libasound2-plugins \
-    && \
-    echo "**** Section cleanup ****" \
-        && apt-get clean autoclean -y \
-        && apt-get autoremove -y \
-        && rm -rf \
-            /var/lib/apt/lists/* \
-            /var/tmp/* \
-            /tmp/* \
-    && \
-    echo
-
 # Install openssh server
 RUN \
     echo "**** Update apt database ****" \
@@ -480,8 +458,42 @@ RUN \
     && \
     echo
 
+# Update sources.list to include sid
+RUN echo "deb http://deb.debian.org/debian sid main contrib non-free" | sudo tee -a /etc/apt/sources.list
+
+# Install audio requirements
+RUN \
+    echo "**** Update apt database ****" \
+        && apt-get update \
+    && \
+    echo "**** Install X Server requirements ****" \
+        && apt-get install -y --no-install-recommends \
+            pulseaudio-utils \
+            alsa-utils \
+            libasound2 \
+            libasound2-plugins \
+    && \
+    echo "**** Install Pipewire ****" \
+        && apt-get install -y \
+            pipewire \
+            pipewire-media-session \
+            pipewire-pulse \
+    && \
+    echo "**** Section cleanup ****" \
+        && apt-get clean autoclean -y \
+        && apt-get autoremove -y \
+        && rm -rf \
+            /var/lib/apt/lists/* \
+            /var/tmp/* \
+            /tmp/* \
+    && \
+    echo
+
+# Remove sid from sources.list
+RUN sed -i '$d' /etc/apt/sources.list
+
 # Setup dind
-# Ref: 
+# Ref:
 #   - https://github.com/docker-library/docker/blob/master/20.10/dind/Dockerfile
 #   - https://docs.nvidia.com/ai-enterprise/deployment-guide/dg-docker.html
 ARG DOCKER_VERSION=20.10.18

@@ -23,9 +23,6 @@ if [ "${MODE}" == "s" ] | [ "${MODE}" == "secondary" ]; then
     echo " - Disable xorg"
     sed -i 's|^autostart.*=.*$|autostart=false|' /etc/supervisor.d/xorg.ini
 
-    # Enable pulseaudio
-    echo " - Enable pulseaudio"
-    sed -i 's|^autostart.*=.*$|autostart=true|' /etc/supervisor.d/pulseaudio.ini
     # Enable steam
     echo " - Enable steam"
     sed -i 's|^autostart.*=.*$|autostart=true|' /etc/supervisor.d/steam.ini
