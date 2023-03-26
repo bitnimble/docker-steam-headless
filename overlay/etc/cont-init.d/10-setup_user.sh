@@ -20,10 +20,8 @@ echo "Setting default user uid=${PUID}(${USER}) gid=${PGID}(${USER})"
 usermod -o -u "${PUID}" ${USER}
 groupmod -o -g "${PGID}" ${USER}
 
-
-echo "Adding default user to video, audio, input and pulse groups"
-usermod -a -G video,audio,input,pulse ${USER}
-
+echo "Adding default user to video, audio, and input groups"
+usermod -a -G video,audio,input ${USER}
 
 echo "Adding default user to any additional required device groups"
 device_nodes=( /dev/uinput /dev/input/event* /dev/dri/* )
